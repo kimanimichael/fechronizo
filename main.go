@@ -1,14 +1,23 @@
 package main
 
 import (
+	"database/sql"
 	"log"
 	"net/http"
 	"os"
 
 	"github.com/go-chi/chi"
-	"github.com/joho/godotenv"
 	"github.com/go-chi/cors"
+	"github.com/joho/godotenv"
+	"github.com/mike-kimani/rssagg/internal/database"
+
+	_ "github.com/lib/pq"
 )
+
+/* holds a connection to a database*/
+type apiConfig struct {
+	DB *database.Queries
+}
 
 func main() {
 	
@@ -18,6 +27,20 @@ func main() {
 	if portString == "" {
 		log.Fatal("Port not found in this environment")
 	}
+
+	dbURL := os.Getenv("DB_URL")
+	if dbURL == "" {
+		log.Fatal("DB_URL not found in this environment")
+	}
+
+	conn, err := sql.Open("postgres", dbURL)
+
+
+
+	if err != nil {
+		log.Fatal("Cannot connect to database")
+	}
+
 
 	router := chi.NewRouter()
 	/* middleware configuration to allow connection to our server through a browser*/
@@ -32,6 +55,10 @@ func main() {
 		AllowCredentials: false,
 		MaxAge:           300, // Maximum value not ignored by any of major browsers
 	}))
+
+	apiCfg := apiConfig{
+		DB: database.New(conn),
+	}
 
 	v1Router := chi.NewRouter()
 	/* handler only fires on get requests*/
