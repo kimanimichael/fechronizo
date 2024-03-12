@@ -17,4 +17,5 @@ type User struct {
 	UpdatedAt     time.Time
 	Name          string
 	ChickenBought sql.NullInt32
+	ApiKey        string
 }
