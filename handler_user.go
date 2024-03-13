@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/guregu/null"
+	"github.com/mike-kimani/rssagg/internal/auth"
 	"github.com/mike-kimani/rssagg/internal/database"
 )
 
@@ -69,5 +69,20 @@ func (apiCfg *apiConfig)handlerCreateUser(w http.ResponseWriter, r *http.Request
 		return
 	}
 
+	respondWithJson(w, 201, databaseUserToUser(user))
+}
+
+func (apiCfg *apiConfig)handlerGetUser(w http.ResponseWriter, r *http.Request) {
+	apiKey, err := auth.GetAPIKey(r.Header)
+	if err != nil {
+		respondWithError(w, 403, fmt.Sprintf("Auth error: %v", err))
+		return
+	}
+	//r.Context() allows using the current context of the request
+	user, err := apiCfg.DB.GetUserByAPIKey(r.Context(), apiKey)
+	if err != nil {
+		respondWithError(w, 400, fmt.Sprintf("Couldn't get user: %v", err))
+		return
+	}
 	respondWithJson(w, 200, databaseUserToUser(user))
 }
