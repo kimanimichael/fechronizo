@@ -40,7 +40,7 @@ type Feed struct {
 	UserName string `json:"user_name"`
 }
 
-func databaseUserToFeed(dbFeed database.Feed) Feed{
+func databaseFeedToFeed(dbFeed database.Feed) Feed{
 	return Feed{
 		ID: dbFeed.ID,
 		CreatedAt: dbFeed.CreatedAt,
