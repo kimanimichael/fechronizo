@@ -3,10 +3,10 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile
-    image: rssagg
-    container_name: rssaggservice-container
+    image: fechronizo
+    container_name: fechronizoservice-container
     environment:
-      - "DB_URL=postgres://postgres:novek@db:5432/rssagg?sslmode=disable"
+      - "DB_URL=postgres://postgres:novek@db:5432/fechronizo?sslmode=disable"
       - "PORT=8080"
     ports:
       - "8080:8080"
@@ -16,23 +16,23 @@ services:
 
   db:
     image: postgres:13-alpine
-    container_name: rssaggdb-container
+    container_name: fechronizodb-container
     ports:
       - "5431:5432"
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: novek
-      POSTGRES_DB: rssagg
+      POSTGRES_DB: fechronizo
     volumes:
-      - rssagg-postgres-data:/var/lib/postgresql/data
+      - fechronizo-postgres-data:/var/lib/postgresql/data
   migrate:
     build:
       context: ..
       dockerfile: docker/Dockerfile.migrate
-    image: rssaggmigrations
-    container_name: rssaggmigrations-container
+    image: fechronizomigrations
+    container_name: fechronizomigrations-container
     command: ["./run_migrations.sh"]
     depends_on:
       - db
 volumes:
-  rssagg-postgres-data:
+  fechronizo-postgres-data:

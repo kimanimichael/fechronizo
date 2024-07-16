@@ -10,6 +10,6 @@ while ! pg_isready -h db -p 5432 ; do
 done
 
 echo "Running migrations..."
-goose -dir ./sql/schema/ postgres postgres://postgres:novek@db:5432/rssagg up
+goose -dir ./sql/schema/ postgres postgres://postgres:novek@db:5432/fechronizo up
 
 echo "Migrations completed"
