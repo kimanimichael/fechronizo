@@ -9,10 +9,10 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/mike-kimani/rssagg/internal/database"
+	"github.com/mike-kimani/fechronizo/internal/database"
 )
 
-func startScraping (
+func startScraping(
 	db *database.Queries,
 	concurrency int,
 	timeBetweenRequest time.Duration,
@@ -20,7 +20,7 @@ func startScraping (
 	log.Printf("Scraping on %v go routines every %s duration", concurrency, timeBetweenRequest)
 	ticker := time.NewTicker(timeBetweenRequest)
 
-	for ; ; <- ticker.C {
+	for ; ; <-ticker.C {
 		feeds, err := db.GetNextFeedsToFetch(
 			context.Background(),
 			int32(concurrency),
@@ -37,13 +37,12 @@ func startScraping (
 		}
 		wg.Wait()
 
-	} 
+	}
 }
 
-func scrapeFeed (db *database.Queries, wg *sync.WaitGroup, feed database.Feed) {
+func scrapeFeed(db *database.Queries, wg *sync.WaitGroup, feed database.Feed) {
 	defer wg.Done()
 
-	
 	rssFeed, err := urlToFeed(feed.Url)
 	if err != nil {
 		log.Println("couldn't convert feed to url", err)
@@ -62,19 +61,19 @@ func scrapeFeed (db *database.Queries, wg *sync.WaitGroup, feed database.Feed) {
 		pubAt, err := time.Parse(time.RFC1123Z, item.PubDate)
 
 		if err != nil {
-			log.Printf("couldn't parse date  %v with error %v" , item.PubDate, err)
+			log.Printf("couldn't parse date  %v with error %v", item.PubDate, err)
 			continue
 		}
 
 		_, err = db.CreatePosts(context.Background(), database.CreatePostsParams{
-			ID: uuid.New(),
-			CreatedAt: time.Now(),
-			UpdatedAt: time.Now(),
-			Title: item.Title,
+			ID:          uuid.New(),
+			CreatedAt:   time.Now(),
+			UpdatedAt:   time.Now(),
+			Title:       item.Title,
 			Description: description,
 			PublishedAt: pubAt,
-			Url: item.Link,
-			FeedID: feed.ID,
+			Url:         item.Link,
+			FeedID:      feed.ID,
 		})
 		if err != nil {
 			if strings.Contains(err.Error(), "duplicate key") {

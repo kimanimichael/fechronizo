@@ -10,7 +10,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/cors"
 	"github.com/joho/godotenv"
-	"github.com/mike-kimani/rssagg/internal/database"
+	"github.com/mike-kimani/fechronizo/internal/database"
 
 	_ "github.com/lib/pq"
 )
@@ -21,7 +21,7 @@ type apiConfig struct {
 }
 
 func main() {
-	
+
 	godotenv.Load(".env")
 
 	portString := os.Getenv("PORT")
@@ -36,20 +36,17 @@ func main() {
 
 	conn, err := sql.Open("postgres", dbURL)
 
-
-
 	if err != nil {
 		log.Fatal("Cannot connect to database")
 	}
-
 
 	router := chi.NewRouter()
 	/* middleware configuration to allow connection to our server through a browser*/
 	router.Use(cors.Handler(cors.Options{
 		// AllowedOrigins:   []string{"https://foo.com"}, // Use this to allow specific origin hosts
-		AllowedOrigins:   []string{"https://*", "http://*"},
+		AllowedOrigins: []string{"https://*", "http://*"},
 		// AllowOriginFunc:  func(r *http.Request, origin string) bool { return true },
-		AllowedMethods:   []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
+		AllowedMethods: []string{"GET", "POST", "PUT", "DELETE", "OPTIONS"},
 		// AllowedHeaders:   []string{"Accept", "Authorization", "Content-Type", "X-CSRF-Token"},
 		AllowedHeaders:   []string{"*"},
 		ExposedHeaders:   []string{"Link"},
@@ -62,7 +59,7 @@ func main() {
 	apiCfg := apiConfig{
 		db,
 	}
-	go startScraping(db, 10, 1 * time.Minute)
+	go startScraping(db, 10, 1*time.Minute)
 
 	v1Router := chi.NewRouter()
 	/* handler only fires on get requests*/
@@ -82,7 +79,7 @@ func main() {
 
 	srv := &http.Server{
 		Handler: router,
-		Addr: ":" + portString,
+		Addr:    ":" + portString,
 	}
 
 	log.Printf("Server starting on port %v", portString)

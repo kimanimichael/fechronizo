@@ -8,14 +8,14 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/mike-kimani/rssagg/internal/database"
+	"github.com/mike-kimani/fechronizo/internal/database"
 )
 
-type jsonNullInt32 struct{
+type jsonNullInt32 struct {
 	sql.NullInt32
 }
 
-func(v jsonNullInt32) MarshalJSON() ([]byte, error) {
+func (v jsonNullInt32) MarshalJSON() ([]byte, error) {
 	if v.Valid {
 		return json.Marshal(v.Int32)
 	} else {
@@ -24,10 +24,10 @@ func(v jsonNullInt32) MarshalJSON() ([]byte, error) {
 
 }
 
-func(v *jsonNullInt32) UnmarshalJSON(data []byte) error {
+func (v *jsonNullInt32) UnmarshalJSON(data []byte) error {
 	var x *int32
 	err := json.Unmarshal(data, &x)
-	
+
 	if err != nil {
 		return err
 	}
@@ -40,10 +40,10 @@ func(v *jsonNullInt32) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (apiCfg *apiConfig)handlerCreateUser(w http.ResponseWriter, r *http.Request) {
+func (apiCfg *apiConfig) handlerCreateUser(w http.ResponseWriter, r *http.Request) {
 
-	type parameters struct{
-		Name string `json:"name"`
+	type parameters struct {
+		Name          string        `json:"name"`
 		ChickenBought sql.NullInt32 `json:"chicken_bought"`
 	}
 
@@ -56,13 +56,13 @@ func (apiCfg *apiConfig)handlerCreateUser(w http.ResponseWriter, r *http.Request
 		return
 	}
 
-	user, err:= apiCfg.DB.CreateUser(r.Context(),database.CreateUserParams{
-		ID: uuid.New(),
-		CreatedAt: time.Now().UTC(),
-		UpdatedAt: time.Now().UTC(),
-		Name: params.Name,
+	user, err := apiCfg.DB.CreateUser(r.Context(), database.CreateUserParams{
+		ID:            uuid.New(),
+		CreatedAt:     time.Now().UTC(),
+		UpdatedAt:     time.Now().UTC(),
+		Name:          params.Name,
 		ChickenBought: params.ChickenBought,
-	} )
+	})
 	if err != nil {
 		respondWithError(w, 400, fmt.Sprintf("Couldn't create user: %v", err))
 		return
@@ -71,15 +71,15 @@ func (apiCfg *apiConfig)handlerCreateUser(w http.ResponseWriter, r *http.Request
 	respondWithJson(w, 201, databaseUserToUser(user))
 }
 
-func (apiCfg *apiConfig)handlerGetUser(w http.ResponseWriter, r *http.Request, user database.User) {
+func (apiCfg *apiConfig) handlerGetUser(w http.ResponseWriter, r *http.Request, user database.User) {
 	respondWithJson(w, 200, databaseUserToUser(user))
 }
 
-func (apiCfg *apiConfig)handlerGetPostsForUser(w http.ResponseWriter, r *http.Request, user database.User) {
+func (apiCfg *apiConfig) handlerGetPostsForUser(w http.ResponseWriter, r *http.Request, user database.User) {
 
 	posts, err := apiCfg.DB.GetPostsForUser(r.Context(), database.GetPostsForUserParams{
 		UserID: user.ID,
-		Limit: 10,
+		Limit:  10,
 	})
 	if err != nil {
 		respondWithError(w, 400, fmt.Sprintf("Couldn't get posts: %v", err))
