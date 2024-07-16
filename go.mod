@@ -1,4 +1,4 @@
-module github.com/mike-kimani/rssagg
+module github.com/mike-kimani/fechronizo
 
 go 1.21.0
 

@@ -4,13 +4,13 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/mike-kimani/rssagg/internal/auth"
-	"github.com/mike-kimani/rssagg/internal/database"
+	"github.com/mike-kimani/fechronizo/internal/auth"
+	"github.com/mike-kimani/fechronizo/internal/database"
 )
 
-type authedHandler func (http.ResponseWriter, *http.Request, database.User)
+type authedHandler func(http.ResponseWriter, *http.Request, database.User)
 
-func(apiCfg *apiConfig) middlewareAuth (handler authedHandler) http.HandlerFunc {
+func (apiCfg *apiConfig) middlewareAuth(handler authedHandler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		apiKey, err := auth.GetAPIKey(r.Header)
 		if err != nil {
