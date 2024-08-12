@@ -4,8 +4,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/mike-kimani/fechronizo/internal/auth"
 	"github.com/mike-kimani/fechronizo/internal/database"
+	"github.com/mike-kimani/fechronizo/pkg/auth"
 )
 
 type authedHandler func(http.ResponseWriter, *http.Request, database.User)
