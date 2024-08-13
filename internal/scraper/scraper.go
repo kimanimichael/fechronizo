@@ -1,4 +1,4 @@
-package main
+package scraper
 
 import (
 	"context"
@@ -10,9 +10,10 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/mike-kimani/fechronizo/internal/database"
+	"github.com/mike-kimani/fechronizo/internal/rss"
 )
 
-func startScraping(
+func StartScraping(
 	db *database.Queries,
 	concurrency int,
 	timeBetweenRequest time.Duration,
@@ -33,17 +34,17 @@ func startScraping(
 		wg := &sync.WaitGroup{}
 		for _, feed := range feeds {
 			wg.Add(1)
-			go scrapeFeed(db, wg, feed)
+			go ScrapeFeed(db, wg, feed)
 		}
 		wg.Wait()
 
 	}
 }
 
-func scrapeFeed(db *database.Queries, wg *sync.WaitGroup, feed database.Feed) {
+func ScrapeFeed(db *database.Queries, wg *sync.WaitGroup, feed database.Feed) {
 	defer wg.Done()
 
-	rssFeed, err := urlToFeed(feed.Url)
+	rssFeed, err := rss.UrlToFeed(feed.Url)
 	if err != nil {
 		log.Println("couldn't convert feed to url", err)
 		return
