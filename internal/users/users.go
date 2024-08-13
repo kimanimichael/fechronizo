@@ -1,15 +1,21 @@
-package main
+package users
 
 import (
 	"database/sql"
 	"encoding/json"
 	"fmt"
+	"github.com/mike-kimani/fechronizo/internal/models"
+	"github.com/mike-kimani/fechronizo/pkg/jsonresponses"
 	"net/http"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/mike-kimani/fechronizo/internal/database"
 )
+
+type ApiConfig struct {
+	DB *database.Queries
+}
 
 type jsonNullInt32 struct {
 	sql.NullInt32
@@ -40,7 +46,7 @@ func (v *jsonNullInt32) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-func (apiCfg *apiConfig) handlerCreateUser(w http.ResponseWriter, r *http.Request) {
+func (apiCfg *ApiConfig) HandlerCreateUser(w http.ResponseWriter, r *http.Request) {
 
 	type parameters struct {
 		Name          string        `json:"name"`
@@ -52,7 +58,7 @@ func (apiCfg *apiConfig) handlerCreateUser(w http.ResponseWriter, r *http.Reques
 	params := parameters{}
 	err := decoder.Decode(&params)
 	if err != nil {
-		respondWithError(w, 400, fmt.Sprintf("Error parsing json: %v", err))
+		jsonresponses.RespondWithError(w, 400, fmt.Sprintf("Error parsing json: %v", err))
 		return
 	}
 
@@ -64,27 +70,27 @@ func (apiCfg *apiConfig) handlerCreateUser(w http.ResponseWriter, r *http.Reques
 		ChickenBought: params.ChickenBought,
 	})
 	if err != nil {
-		respondWithError(w, 400, fmt.Sprintf("Couldn't create user: %v", err))
+		jsonresponses.RespondWithError(w, 400, fmt.Sprintf("Couldn't create user: %v", err))
 		return
 	}
 
-	respondWithJson(w, 201, databaseUserToUser(user))
+	jsonresponses.RespondWithJson(w, 201, models.DatabaseUserToUser(user))
 }
 
-func (apiCfg *apiConfig) handlerGetUser(w http.ResponseWriter, r *http.Request, user database.User) {
-	respondWithJson(w, 200, databaseUserToUser(user))
+func (apiCfg *ApiConfig) HandlerGetUser(w http.ResponseWriter, r *http.Request, user database.User) {
+	jsonresponses.RespondWithJson(w, 200, models.DatabaseUserToUser(user))
 }
 
-func (apiCfg *apiConfig) handlerGetPostsForUser(w http.ResponseWriter, r *http.Request, user database.User) {
+func (apiCfg *ApiConfig) HandlerGetPostsForUser(w http.ResponseWriter, r *http.Request, user database.User) {
 
 	posts, err := apiCfg.DB.GetPostsForUser(r.Context(), database.GetPostsForUserParams{
 		UserID: user.ID,
 		Limit:  10,
 	})
 	if err != nil {
-		respondWithError(w, 400, fmt.Sprintf("Couldn't get posts: %v", err))
+		jsonresponses.RespondWithError(w, 400, fmt.Sprintf("Couldn't get posts: %v", err))
 		return
 	}
 
-	respondWithJson(w, 200, databasePostsToPosts(posts))
+	jsonresponses.RespondWithJson(w, 200, models.DatabasePostsToPosts(posts))
 }
