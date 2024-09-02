@@ -35,5 +35,5 @@ goose postgres postgres://{userName}:{password}@localhost:5432/{databaseName} up
 
 #### Build and Start the Server
 ``
-go build && ./fechronizo
+go build -o build/fechronizo ./cmd/fechronizo && ./build/fechronizo
 ``
