@@ -9,7 +9,7 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o fechronizo
+RUN go build -o fechronizo ./cmd/fechronizo
 
 FROM alpine:latest
 
