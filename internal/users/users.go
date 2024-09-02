@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/mike-kimani/fechronizo/internal/models"
-	"github.com/mike-kimani/fechronizo/pkg/jsonresponses"
+	"github.com/mike-kimani/fechronizo/pkg/httpresponses"
 	"net/http"
 	"time"
 
@@ -58,7 +58,7 @@ func (apiCfg *ApiConfig) HandlerCreateUser(w http.ResponseWriter, r *http.Reques
 	params := parameters{}
 	err := decoder.Decode(&params)
 	if err != nil {
-		jsonresponses.RespondWithError(w, 400, fmt.Sprintf("Error parsing json: %v", err))
+		httpresponses.RespondWithError(w, 400, fmt.Sprintf("Error parsing json: %v", err))
 		return
 	}
 
@@ -70,15 +70,15 @@ func (apiCfg *ApiConfig) HandlerCreateUser(w http.ResponseWriter, r *http.Reques
 		ChickenBought: params.ChickenBought,
 	})
 	if err != nil {
-		jsonresponses.RespondWithError(w, 400, fmt.Sprintf("Couldn't create user: %v", err))
+		httpresponses.RespondWithError(w, 400, fmt.Sprintf("Couldn't create user: %v", err))
 		return
 	}
 
-	jsonresponses.RespondWithJson(w, 201, models.DatabaseUserToUser(user))
+	httpresponses.RespondWithJson(w, 201, models.DatabaseUserToUser(user))
 }
 
 func (apiCfg *ApiConfig) HandlerGetUser(w http.ResponseWriter, r *http.Request, user database.User) {
-	jsonresponses.RespondWithJson(w, 200, models.DatabaseUserToUser(user))
+	httpresponses.RespondWithJson(w, 200, models.DatabaseUserToUser(user))
 }
 
 func (apiCfg *ApiConfig) HandlerGetPostsForUser(w http.ResponseWriter, r *http.Request, user database.User) {
@@ -88,9 +88,9 @@ func (apiCfg *ApiConfig) HandlerGetPostsForUser(w http.ResponseWriter, r *http.R
 		Limit:  10,
 	})
 	if err != nil {
-		jsonresponses.RespondWithError(w, 400, fmt.Sprintf("Couldn't get posts: %v", err))
+		httpresponses.RespondWithError(w, 400, fmt.Sprintf("Couldn't get posts: %v", err))
 		return
 	}
 
-	jsonresponses.RespondWithJson(w, 200, models.DatabasePostsToPosts(posts))
+	httpresponses.RespondWithJson(w, 200, models.DatabasePostsToPosts(posts))
 }

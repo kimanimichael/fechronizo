@@ -1,10 +1,10 @@
 package errors
 
 import (
-	"github.com/mike-kimani/fechronizo/pkg/jsonresponses"
+	"github.com/mike-kimani/fechronizo/pkg/httpresponses"
 	"net/http"
 )
 
 func HandlerErr(w http.ResponseWriter, r *http.Request) {
-	jsonresponses.RespondWithError(w, 400, "Something went wrong")
+	httpresponses.RespondWithError(w, 400, "Something went wrong")
 }

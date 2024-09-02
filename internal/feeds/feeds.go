@@ -4,12 +4,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/mike-kimani/fechronizo/internal/models"
+	"github.com/mike-kimani/fechronizo/pkg/httpresponses"
 	"net/http"
 	"time"
 
 	"github.com/google/uuid"
 	"github.com/mike-kimani/fechronizo/internal/database"
-	"github.com/mike-kimani/fechronizo/pkg/jsonresponses"
 )
 
 type ApiConfig struct {
@@ -28,7 +28,7 @@ func (apiCfg *ApiConfig) HandlerCreateFeed(w http.ResponseWriter, r *http.Reques
 	params := parameters{}
 	err := decoder.Decode(&params)
 	if err != nil {
-		jsonresponses.RespondWithError(w, 400, fmt.Sprintf("Error parsing json: %v", err))
+		httpresponses.RespondWithError(w, 400, fmt.Sprintf("Error parsing json: %v", err))
 		return
 	}
 
@@ -42,18 +42,18 @@ func (apiCfg *ApiConfig) HandlerCreateFeed(w http.ResponseWriter, r *http.Reques
 		UserName:  user.Name,
 	})
 	if err != nil {
-		jsonresponses.RespondWithError(w, 400, fmt.Sprintf("Couldn't create feed: %v", err))
+		httpresponses.RespondWithError(w, 400, fmt.Sprintf("Couldn't create feed: %v", err))
 		return
 	}
 
-	jsonresponses.RespondWithJson(w, 201, models.DatabaseFeedToFeed(feed))
+	httpresponses.RespondWithJson(w, 201, models.DatabaseFeedToFeed(feed))
 }
 
 func (apiCfg *ApiConfig) HandlerGetFeed(w http.ResponseWriter, r *http.Request) {
 
 	feeds, err := apiCfg.DB.GetFeeds(r.Context())
 	if err != nil {
-		jsonresponses.RespondWithError(w, 400, fmt.Sprintf("Couldn't get feeds %v", err))
+		httpresponses.RespondWithError(w, 400, fmt.Sprintf("Couldn't get feeds %v", err))
 	}
-	jsonresponses.RespondWithJson(w, 200, models.DatabaseFeedstoFeeds(feeds))
+	httpresponses.RespondWithJson(w, 200, models.DatabaseFeedstoFeeds(feeds))
 }

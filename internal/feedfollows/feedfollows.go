@@ -3,6 +3,7 @@ package feedfollows
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/mike-kimani/fechronizo/pkg/httpresponses"
 	"net/http"
 	"time"
 
@@ -10,7 +11,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/mike-kimani/fechronizo/internal/database"
 	"github.com/mike-kimani/fechronizo/internal/models"
-	"github.com/mike-kimani/fechronizo/pkg/jsonresponses"
 )
 
 type ApiConfig struct {
@@ -28,7 +28,7 @@ func (apiCfg *ApiConfig) HandlerCreateFeedFollow(w http.ResponseWriter, r *http.
 
 	err := decoder.Decode(&params)
 	if err != nil {
-		jsonresponses.RespondWithError(w, 400, fmt.Sprintf("error parsing json %v", err))
+		httpresponses.RespondWithError(w, 400, fmt.Sprintf("error parsing json %v", err))
 		return
 	}
 
@@ -41,10 +41,10 @@ func (apiCfg *ApiConfig) HandlerCreateFeedFollow(w http.ResponseWriter, r *http.
 	})
 
 	if err != nil {
-		jsonresponses.RespondWithError(w, 400, fmt.Sprintf("Couldn't create feed follow %v", err))
+		httpresponses.RespondWithError(w, 400, fmt.Sprintf("Couldn't create feed follow %v", err))
 	}
 
-	jsonresponses.RespondWithJson(w, 200, models.DatabaseFeedFollowtoFeedFollow(feedFollow))
+	httpresponses.RespondWithJson(w, 200, models.DatabaseFeedFollowtoFeedFollow(feedFollow))
 
 }
 
@@ -58,18 +58,18 @@ func (apiCfg *ApiConfig) HandlerGetFeedFollows(w http.ResponseWriter, r *http.Re
 
 	err := decoder.Decode(&params)
 	if err != nil {
-		jsonresponses.RespondWithError(w, 400, fmt.Sprintf("error parsing json %v", err))
+		httpresponses.RespondWithError(w, 400, fmt.Sprintf("error parsing json %v", err))
 		return
 	}
 
 	feedFollows, err := apiCfg.DB.GetFeedFollows(r.Context(), params.UserID)
 
 	if err != nil {
-		jsonresponses.RespondWithError(w, 400, fmt.Sprintf("Couldn't get feed follows %v", err))
+		httpresponses.RespondWithError(w, 400, fmt.Sprintf("Couldn't get feed follows %v", err))
 		return
 	}
 
-	jsonresponses.RespondWithJson(w, 200, models.DatabaseFeedFollowstoFeedFollows(feedFollows))
+	httpresponses.RespondWithJson(w, 200, models.DatabaseFeedFollowstoFeedFollows(feedFollows))
 }
 
 func (apiCfg *ApiConfig) HandlerDeleteFeedFollows(w http.ResponseWriter, r *http.Request, user database.User) {
@@ -82,7 +82,7 @@ func (apiCfg *ApiConfig) HandlerDeleteFeedFollows(w http.ResponseWriter, r *http
 
 	err := decoder.Decode(&params)
 	if err != nil {
-		jsonresponses.RespondWithError(w, 400, fmt.Sprintf("error parsing json %v", err))
+		httpresponses.RespondWithError(w, 400, fmt.Sprintf("error parsing json %v", err))
 		return
 	}
 
@@ -91,17 +91,17 @@ func (apiCfg *ApiConfig) HandlerDeleteFeedFollows(w http.ResponseWriter, r *http
 		UserID: user.ID,
 	})
 	if err != nil {
-		jsonresponses.RespondWithError(w, 400, fmt.Sprintf("couldn't delete feed follow %v", err))
+		httpresponses.RespondWithError(w, 400, fmt.Sprintf("couldn't delete feed follow %v", err))
 		return
 	}
-	jsonresponses.RespondWithJson(w, 200, "Successfully deleted feed follow")
+	httpresponses.RespondWithJson(w, 200, "Successfully deleted feed follow")
 }
 
 func (apiCfg *ApiConfig) HandlerDeleteFeedFollows2(w http.ResponseWriter, r *http.Request, user database.User) {
 	feedFollowIDStr := chi.URLParam(r, "feedFollowID")
 	feedFollowID, err := uuid.Parse(feedFollowIDStr)
 	if err != nil {
-		jsonresponses.RespondWithError(w, 400, fmt.Sprintf("couldn't parse the feed ID %v", err))
+		httpresponses.RespondWithError(w, 400, fmt.Sprintf("couldn't parse the feed ID %v", err))
 		return
 	}
 	err = apiCfg.DB.DeleteFeedFollows(r.Context(), database.DeleteFeedFollowsParams{
@@ -110,9 +110,9 @@ func (apiCfg *ApiConfig) HandlerDeleteFeedFollows2(w http.ResponseWriter, r *htt
 	})
 
 	if err != nil {
-		jsonresponses.RespondWithError(w, 400, fmt.Sprintf("couldn't delete feed follow %v", err))
+		httpresponses.RespondWithError(w, 400, fmt.Sprintf("couldn't delete feed follow %v", err))
 		return
 	}
 
-	jsonresponses.RespondWithJson(w, 200, struct{}{})
+	httpresponses.RespondWithJson(w, 200, struct{}{})
 }
