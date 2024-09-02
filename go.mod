@@ -1,4 +1,4 @@
-module github.com/mike-kimani/fechronizo
+module github.com/mike-kimani/fechronizo/v2
 
 go 1.21.0
 
