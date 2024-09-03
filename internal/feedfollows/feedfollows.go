@@ -3,14 +3,14 @@ package feedfollows
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/mike-kimani/fechronizo/pkg/httpresponses"
+	"github.com/mike-kimani/fechronizo/v2/pkg/httpresponses"
 	"net/http"
 	"time"
 
 	"github.com/go-chi/chi"
 	"github.com/google/uuid"
-	"github.com/mike-kimani/fechronizo/internal/database"
-	"github.com/mike-kimani/fechronizo/internal/models"
+	"github.com/mike-kimani/fechronizo/v2/internal/database"
+	"github.com/mike-kimani/fechronizo/v2/internal/models"
 )
 
 type ApiConfig struct {

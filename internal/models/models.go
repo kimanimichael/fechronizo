@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/mike-kimani/fechronizo/internal/database"
+	"github.com/mike-kimani/fechronizo/v2/internal/database"
 
 	"database/sql"
 )

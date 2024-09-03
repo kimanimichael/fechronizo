@@ -2,11 +2,11 @@ package middleware
 
 import (
 	"fmt"
-	"github.com/mike-kimani/fechronizo/pkg/httpresponses"
+	"github.com/mike-kimani/fechronizo/v2/pkg/httpresponses"
 	"net/http"
 
-	"github.com/mike-kimani/fechronizo/internal/database"
-	"github.com/mike-kimani/fechronizo/pkg/auth"
+	"github.com/mike-kimani/fechronizo/v2/internal/database"
+	"github.com/mike-kimani/fechronizo/v2/pkg/auth"
 )
 
 type ApiConfig struct {

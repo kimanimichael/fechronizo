@@ -2,13 +2,13 @@ package main
 
 import (
 	"database/sql"
-	"github.com/mike-kimani/fechronizo/internal/feedfollows"
-	"github.com/mike-kimani/fechronizo/internal/feeds"
-	"github.com/mike-kimani/fechronizo/internal/middleware"
-	"github.com/mike-kimani/fechronizo/internal/scraper"
-	"github.com/mike-kimani/fechronizo/internal/users"
-	"github.com/mike-kimani/fechronizo/pkg/errors"
-	"github.com/mike-kimani/fechronizo/pkg/readiness"
+	"github.com/mike-kimani/fechronizo/v2/internal/feedfollows"
+	"github.com/mike-kimani/fechronizo/v2/internal/feeds"
+	"github.com/mike-kimani/fechronizo/v2/internal/middleware"
+	"github.com/mike-kimani/fechronizo/v2/internal/scraper"
+	"github.com/mike-kimani/fechronizo/v2/internal/users"
+	"github.com/mike-kimani/fechronizo/v2/pkg/errors"
+	"github.com/mike-kimani/fechronizo/v2/pkg/readiness"
 	"log"
 	"net/http"
 	"os"
@@ -17,7 +17,7 @@ import (
 	"github.com/go-chi/chi"
 	"github.com/go-chi/cors"
 	"github.com/joho/godotenv"
-	"github.com/mike-kimani/fechronizo/internal/database"
+	"github.com/mike-kimani/fechronizo/v2/internal/database"
 
 	_ "github.com/lib/pq"
 )
