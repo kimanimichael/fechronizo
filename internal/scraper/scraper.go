@@ -9,8 +9,8 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/mike-kimani/fechronizo/internal/database"
-	"github.com/mike-kimani/fechronizo/internal/rss"
+	"github.com/mike-kimani/fechronizo/v2/internal/database"
+	"github.com/mike-kimani/fechronizo/v2/internal/rss"
 )
 
 func StartScraping(

@@ -1,7 +1,7 @@
 package errors
 
 import (
-	"github.com/mike-kimani/fechronizo/pkg/httpresponses"
+	"github.com/mike-kimani/fechronizo/v2/pkg/httpresponses"
 	"net/http"
 )
 
